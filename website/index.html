@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyberbullying Impact Analyzer</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 8.7 8 9 4.6-.3 8-4 8-9V5l-8-3Z"/></svg>
+      </span>
+      Cyberbullying Impact Analyzer
+    </div>
+    <nav class="topnav">
+      <a href="#analyzer">Analyzer</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#model">The model</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO / LIVE ANALYZER -->
+  <section class="hero" id="analyzer">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">ML-based &middot; runs entirely in your browser</p>
+        <h1>Detect it.<br>Weigh it.<br><span class="accent">Understand its impact.</span></h1>
+        <p class="hero-sub">
+          Paste any message below. A logistic regression model trained on
+          47,692 real tweets classifies the type of online harassment, and a
+          transparent scoring model estimates its likely psychological impact
+          &mdash; not just whether it's bullying, but how much it could hurt.
+        </p>
+        <div class="hero-facts">
+          <div><strong>81.9%</strong><span>test accuracy</span></div>
+          <div><strong>6</strong><span>harassment categories</span></div>
+          <div><strong>0ms</strong><span>server round-trip</span></div>
+        </div>
+      </div>
+
+      <div class="analyzer-card">
+        <label for="textInput" class="field-label">Message to analyze</label>
+        <textarea id="textInput" placeholder="e.g. &quot;Go back to where you came from, nobody wants you here&quot;"></textarea>
+        <div class="sample-row">
+          <span>Try:</span>
+          <button class="chip" data-sample="Your religion is a joke and your god is fake, you people are all the same">Religion-based</button>
+          <button class="chip" data-sample="Women are too emotional to be leaders, stick to the kitchen">Gender-based</button>
+          <button class="chip" data-sample="Happy birthday! hope you have an amazing day with your family">Neutral</button>
+        </div>
+        <button id="analyzeBtn" class="primary-btn">Analyze message</button>
+
+        <div id="resultBlock" class="result-block hidden">
+          <div class="result-top">
+            <div class="result-category">
+              <span class="result-label">Predicted category</span>
+              <span id="categoryOut" class="category-pill">&mdash;</span>
+            </div>
+            <div class="result-confidence">
+              <span class="result-label">Model confidence</span>
+              <span id="confidenceOut" class="confidence-value">&mdash;</span>
+            </div>
+          </div>
+
+          <div class="gauge-row">
+            <div class="gauge-wrap">
+              <svg viewBox="0 0 200 120" class="gauge-svg">
+                <path d="M20,110 A80,80 0 0 1 180,110" class="gauge-track"/>
+                <path id="gaugeArc" d="M20,110 A80,80 0 0 1 180,110" class="gauge-fill"/>
+                <line id="gaugeNeedle" x1="100" y1="110" x2="100" y2="40" class="gauge-needle"/>
+                <circle cx="100" cy="110" r="6" fill="#1E2761"/>
+              </svg>
+              <div class="gauge-value"><span id="scoreOut">0</span><small>/100</small></div>
+              <div class="gauge-tier" id="tierOut">&mdash;</div>
+            </div>
+            <div class="prob-list" id="probList"></div>
+          </div>
+
+          <p id="explainOut" class="explain-text"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how-it-works">
+    <div class="wrap">
+      <h2 class="section-title">How it works</h2>
+      <div class="pipeline">
+        <div class="pipe-step"><div class="pipe-dot">1</div><h3>Clean text</h3><p>Lowercase, strip URLs, mentions, punctuation</p></div>
+        <div class="pipe-step"><div class="pipe-dot">2</div><h3>Vectorize</h3><p>TF-IDF converts words into weighted numeric features</p></div>
+        <div class="pipe-step"><div class="pipe-dot">3</div><h3>Classify</h3><p>Logistic regression scores all 6 categories</p></div>
+        <div class="pipe-step"><div class="pipe-dot">4</div><h3>Score impact</h3><p>Category weight + confidence + intensity &rarr; 0&ndash;100</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODEL / DATASET -->
+  <section class="section alt" id="model">
+    <div class="wrap model-grid">
+      <div>
+        <h2 class="section-title">Trained on real data</h2>
+        <p class="section-body">
+          The model is trained on the <strong>Cyberbullying Classification</strong>
+          dataset (Kaggle) &mdash; 47,692 real tweets, manually labeled across
+          six balanced categories: age, ethnicity, gender, religion, other
+          cyberbullying, and not cyberbullying.
+        </p>
+        <ul class="check-list">
+          <li>TF-IDF + Logistic Regression, trained in scikit-learn</li>
+          <li>81.9% accuracy on a held-out 20% test set</li>
+          <li>Model weights exported to run fully client-side &mdash; no server, no data leaves your browser</li>
+        </ul>
+      </div>
+      <div class="stat-card">
+        <div class="stat-row"><span>Age</span><div class="bar"><div class="bar-fill" style="width:96%"></div></div><span class="stat-num">96% F1</span></div>
+        <div class="stat-row"><span>Ethnicity</span><div class="bar"><div class="bar-fill" style="width:97%"></div></div><span class="stat-num">97% F1</span></div>
+        <div class="stat-row"><span>Religion</span><div class="bar"><div class="bar-fill" style="width:95%"></div></div><span class="stat-num">95% F1</span></div>
+        <div class="stat-row"><span>Gender</span><div class="bar"><div class="bar-fill" style="width:86%"></div></div><span class="stat-num">86% F1</span></div>
+        <div class="stat-row"><span>Other</span><div class="bar"><div class="bar-fill accent" style="width:61%"></div></div><span class="stat-num">61% F1</span></div>
+        <div class="stat-row"><span>Not bullying</span><div class="bar"><div class="bar-fill accent" style="width:56%"></div></div><span class="stat-num">56% F1</span></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <p>Built for an ML internship project &middot; educational demonstration, not a clinical diagnostic tool.</p>
+    <p class="footer-note">Impact scores are a transparent heuristic, not a validated psychometric measure.</p>
+  </div>
+</footer>
+
+<script src="model.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
